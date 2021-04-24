@@ -14,9 +14,9 @@ think-swoole websocket js 客户端
 
 ### npm
 ```text
-npm install think-swoole-client
+npm i @hahadu/think-swoole-client
 or
-yarn add  think-swoole-client
+yarn add @hahadu/think-swoole-client
 ```
 
 ### 消息处理

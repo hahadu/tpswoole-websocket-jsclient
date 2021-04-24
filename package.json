@@ -1,7 +1,7 @@
 {
   "name": "@hahadu/think-swoole-client",
-  "version": "0.2.0",
-  "description": " think-swoole websocket javascript client",
+  "version": "0.2.1",
+  "description": "think-swoole websocket javascript client",
   "main": "js/websocketClient.js",
   "directories": {
     "test": "test"
@@ -16,6 +16,7 @@
   "keywords": [
     "think-swoole",
     "websocket",
+    "javascript",
     "client"
   ],
   "author": "hahadu",
@@ -23,8 +24,5 @@
   "bugs": {
     "url": "https://github.com/hahadu/tpswoole-websocket-jsclient/issues"
   },
-  "homepage": "https://github.com/hahadu/tpswoole-websocket-jsclient#readme",
-  "dependencies": {
-    "@hahadu/think-swoole-client": "^0.2.0"
-  }
+  "homepage": "https://github.com/hahadu/tpswoole-websocket-jsclient#readme"
 }

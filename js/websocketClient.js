@@ -313,3 +313,4 @@ const swoole_socket_packet_type = {
 
 }
 
+export {hahaduWebsocketClient,hahaduWebsocketResponse,swoole_engine_packet_type,swoole_socket_packet_type}

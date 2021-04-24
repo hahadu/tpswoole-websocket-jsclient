@@ -3,12 +3,22 @@ think-swoole javascript websocket client
 
 think-swoole websocket js 客户端
 
+
+
 ## 使用
 
 ### 引入js文件
 ```html
 <script src="websocketClient.js"></script>
 ```
+
+### npm
+```text
+npm install think-swoole-client
+or
+yarn add  think-swoole-client
+```
+
 ### 消息处理
 ```javascript
 var response = hahaduWebsocketResponse;

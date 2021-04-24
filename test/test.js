@@ -1,3 +1,5 @@
+import {hahaduWebsocketClient,hahaduWebsocketResponse} from "../js/websocketClient";
+
 var response = hahaduWebsocketResponse;
 response.decodeMessage = function (message) {
     alert(JSON.stringify(message));

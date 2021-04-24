@@ -123,7 +123,7 @@ let hahaduWebsocketClient = {
                 if (hahaduWebsocketClient.checkJson(received_msg)) {
                     console.log(received_msg);
 
-                    let message_data = $.parseJSON(received_msg);
+                    let message_data = JSON.parse(received_msg);
 
                     return hahaduWebsocketResponse.decodeMessage(message_data);
 
@@ -131,27 +131,28 @@ let hahaduWebsocketClient = {
                     let response_status = (received_msg.charAt(0));
 
                     if(response_status==swoole_engine_packet_type.PONG){
-                        received_msg = $.parseJSON(received_msg.slice(2));
+                        received_msg = JSON.parse(received_msg.slice(2));
                         hahaduWebsocketResponse.pong(received_msg);
                         hahaduWebsocketClient.reconnectionFunc();
                     }
                     if(response_status==swoole_engine_packet_type.PING){
-                        received_msg = $.parseJSON(received_msg.slice(2));
+                        received_msg = JSON.parse(received_msg.slice(2));
                         hahaduWebsocketResponse.ping(received_msg);
                         hahaduWebsocketClient.reconnectionFunc();
                     }
                     if(response_status==swoole_engine_packet_type.MESSAGE){
                         let pack_status = received_msg.charAt(1);
+                        received_msg = received_msg.slice(2);
                         //alert(pack_status);
                         if(pack_status==swoole_socket_packet_type.CONNECT_ERROR){
-                            received_msg = $.parseJSON(received_msg.slice(2));
+                            received_msg = JSON.parse(received_msg);
                             hahaduWebsocketResponse.errorMessage(received_msg);
                         }
                         if(pack_status==swoole_socket_packet_type.CONNECT){
                             if(hahaduWebsocketClient.checkJson(received_msg)){
-                                received_msg = $.parseJSON(received_msg.slice(2));
-                                hahaduWebsocketResponse.decodeMessage(received_msg);
+                                received_msg = JSON.parse(received_msg);
                             }
+                            hahaduWebsocketResponse.decodeMessage(received_msg);
                             hahaduWebsocketClient.reconnectionFunc();
                         }
 
@@ -190,6 +191,7 @@ let hahaduWebsocketClient = {
         if(this.sendData.packetId!==''){
             packetId = ','+this.sendData.packetId;
         }
+
 
 
         this.websocket.send(this.sendData.engineType + this.sendData.packetType + packetNsp + packetId + JSON.stringify({

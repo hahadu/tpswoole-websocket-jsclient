@@ -70,6 +70,7 @@ let hahaduWebsocketClient = {
         packetNsp:'',
         packetId:''
     },
+    debugger:false,
 
     /*****
      * 自动重连 默认true 开启
@@ -82,7 +83,7 @@ let hahaduWebsocketClient = {
         }
     },
     heartCheck:{
-        timeout: 30000, //每隔三秒发送心跳
+        timeout: 30000, //心跳检测时间
         num: 3,  //3次心跳均未响应重连
         timeoutObj: null,
         serverTimeoutObj: null,
@@ -106,6 +107,9 @@ let hahaduWebsocketClient = {
         }
     },
 
+    /*****
+     * weobsocket 连接方法
+     */
     websocketInit:function(){
         try {
             this.websocket = new WebSocket(this.wsServer);//新创建一个socket对象
@@ -119,9 +123,11 @@ let hahaduWebsocketClient = {
             this.websocket.onmessage = function (evt) {
 
                 let received_msg = evt.data;
+                if(!!hahaduWebsocketClient.debugger){
+                    console.log(received_msg);
+                }
 
                 if (hahaduWebsocketClient.checkJson(received_msg)) {
-                    console.log(received_msg);
 
                     let message_data = JSON.parse(received_msg);
 
@@ -192,8 +198,6 @@ let hahaduWebsocketClient = {
         if(this.sendData.packetId!==''){
             packetId = ','+this.sendData.packetId;
         }
-
-
 
         this.websocket.send(this.sendData.engineType + this.sendData.packetType + packetNsp + packetId + JSON.stringify({
             type: this.sendData.sendType,

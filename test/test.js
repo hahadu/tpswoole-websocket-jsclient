@@ -1,4 +1,4 @@
-import {hahaduWebsocketClient,hahaduWebsocketResponse} from "../js/websocketClient";
+import {hahaduWebsocketClient,hahaduWebsocketResponse} from "../src/websocketClient";
 
 var response = hahaduWebsocketResponse;
 response.decodeMessage = function (message) {

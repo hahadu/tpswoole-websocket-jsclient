@@ -1,6 +1,6 @@
 {
   "name": "@hahadu/think-swoole-client",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "think-swoole websocket javascript client",
   "main": "js/websocketClient.js",
   "directories": {

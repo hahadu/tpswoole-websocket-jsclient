@@ -143,16 +143,17 @@ let hahaduWebsocketClient = {
                     if(response_status==swoole_engine_packet_type.MESSAGE){
                         let pack_status = received_msg.charAt(1);
                         received_msg = received_msg.slice(2);
-                        //alert(pack_status);
-                        if(pack_status==swoole_socket_packet_type.CONNECT_ERROR){
+
+                        if(hahaduWebsocketClient.checkJson(received_msg)){
                             received_msg = JSON.parse(received_msg);
+                        }
+                        if(pack_status==swoole_socket_packet_type.CONNECT_ERROR){
                             hahaduWebsocketResponse.errorMessage(received_msg);
                         }
                         if(pack_status==swoole_socket_packet_type.CONNECT){
-                            if(hahaduWebsocketClient.checkJson(received_msg)){
-                                received_msg = JSON.parse(received_msg);
+                            if(!!received_msg){
+                                hahaduWebsocketResponse.decodeMessage(received_msg);
                             }
-                            hahaduWebsocketResponse.decodeMessage(received_msg);
                             hahaduWebsocketClient.reconnectionFunc();
                         }
 

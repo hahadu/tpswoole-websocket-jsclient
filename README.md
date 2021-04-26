@@ -9,7 +9,7 @@ think-swoole websocket js 客户端
 
 ### 引入js文件
 ```html
-<script src="websocketClient.js"></script>
+<script src="js/websocketClient.js"></script>
 ```
 
 ### npm
@@ -45,3 +45,6 @@ client.websocketInit();
 client.sendData.data = 'hello'; //消息主体
 client.send(); //发送消息
 ```
+
+### server
+github: [hahadu/think-swoole-socket](https://github.com/hahadu/think-swoole-socket)

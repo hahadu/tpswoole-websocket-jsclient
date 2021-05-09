@@ -1,6 +1,88 @@
 /******
  * @page https://github.com/hahadu/tpswoole-websocket-jsclient
  */
+/*****
+ * engine packet type
+ * @type {{MESSAGE: number, NOOP: number, PING: number, UPGRADE: number, CLOSE: number, PONG: number, OPEN: number}}
+ */
+const swoole_engine_packet_type={
+    /**
+     * packet type `open`.
+     */
+    OPEN : 0,
+
+    /**
+     * packet type `close`.
+     */
+    CLOSE : 1,
+
+    /**
+     * packet type `ping`.
+     */
+    PING : 2,
+
+    /**
+     * packet type `pong`.
+     */
+    PONG : 3,
+
+    /**
+     * packet type `message`.
+     */
+    MESSAGE : 4,
+
+    /**
+     * packet type 'upgrade'
+     */
+    UPGRADE : 5,
+
+    /**
+     * packet type `noop`.
+     */
+    NOOP : 6,
+}
+/*****
+ * socket packet type
+ * @type {{CONNECT_ERROR: number, BINARY_ACK: number, ACK: number, CONNECT: number, DISCONNECT: number, BINARY_EVENT: number, EVENT: number}}
+ */
+const swoole_socket_packet_type = {
+    /**
+     * Socket packet type `connect`.
+     */
+    CONNECT : 0,
+
+    /**
+     * Socket packet type `disconnect`.
+     */
+    DISCONNECT : 1,
+
+    /**
+     * Socket packet type `event`.
+     */
+    EVENT : 2,
+
+    /**
+     * Socket packet type `ack`.
+     */
+    ACK : 3,
+
+    /**
+     * Socket packet type `connect_error`.
+     */
+    CONNECT_ERROR : 4,
+
+    /**
+     * Socket packet type 'binary event'
+     */
+    BINARY_EVENT : 5,
+
+    /**
+     * Socket packet type `binary ack`.
+     * For acks with binary arguments.
+     */
+    BINARY_ACK : 6,
+
+}
 
 /******
  * 消息处理
@@ -65,12 +147,15 @@ let hahaduWebsocketClient = {
     sendData:{
         sendType:'',
         data:'',
-        engineType:'4',
-        packetType:'0',
+        engineType:swoole_engine_packet_type.MESSAGE.toString(),
+        packetType:swoole_socket_packet_type.CONNECT.toString(),
         packetNsp:'',
         packetId:''
     },
-    debugger:false,
+    debugger:false, //调试模式
+    onbeforeunload:false,//窗口刷新断开连接
+    onunload:true, //窗口关闭断开连接
+
 
     /*****
      * 自动重连 默认true 开启
@@ -173,10 +258,14 @@ let hahaduWebsocketClient = {
             };
             //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
             window.onbeforeunload = function () {
-                hahaduWebsocketClient.quit();
+                if(hahaduWebsocketClient.onbeforeunload){
+                    hahaduWebsocketClient.disconnect();
+                }
             };
             window.onunload = function (){
-                hahaduWebsocketClient.quit();
+                if(hahaduWebsocketClient.onbeforeunload) {
+                    hahaduWebsocketClient.disconnect();
+                }
             }
 
         } catch (ex) {
@@ -203,6 +292,15 @@ let hahaduWebsocketClient = {
             type: this.sendData.sendType,
             data: this.sendData.data
         }));
+        this.sendData = {
+            sendType: '',
+            data: '',
+            engineType: swoole_engine_packet_type.MESSAGE.toString(),
+            packetType: swoole_socket_packet_type.CONNECT.toString(),
+            packetNsp: '',
+            packetId: ''
+        }
+
     },
     ping:function (){
         this.sendData.sendType  = 'ping';
@@ -216,8 +314,18 @@ let hahaduWebsocketClient = {
         this.sendData.engineType = swoole_engine_packet_type.PONG
         return this.send();
     },
+    /*****
+     * socket close
+     */
     quit:function (){
         this.websocket.close();
+    },
+    /****
+     * disconnect
+     */
+    disconnect:function () {
+        this.sendData.packetType = swoole_socket_packet_type.DISCONNECT;
+        this.send();
     },
     checkJson:function (str){
         if (typeof str == 'string') {
@@ -234,88 +342,6 @@ let hahaduWebsocketClient = {
             }
         }
     }
-}
-/*****
- * engine packet type
- * @type {{MESSAGE: number, NOOP: number, PING: number, UPGRADE: number, CLOSE: number, PONG: number, OPEN: number}}
- */
-const swoole_engine_packet_type={
-    /**
-     * packet type `open`.
-     */
-    OPEN : 0,
-
-    /**
-     * packet type `close`.
-     */
-    CLOSE : 1,
-
-    /**
-     * packet type `ping`.
-     */
-    PING : 2,
-
-    /**
-     * packet type `pong`.
-     */
-    PONG : 3,
-
-    /**
-     * packet type `message`.
-     */
-    MESSAGE : 4,
-
-    /**
-     * packet type 'upgrade'
-     */
-    UPGRADE : 5,
-
-    /**
-     * packet type `noop`.
-     */
-    NOOP : 6,
-}
-/*****
- * socket packet type
- * @type {{CONNECT_ERROR: number, BINARY_ACK: number, ACK: number, CONNECT: number, DISCONNECT: number, BINARY_EVENT: number, EVENT: number}}
- */
-const swoole_socket_packet_type = {
-    /**
-     * Socket packet type `connect`.
-     */
-    CONNECT : 0,
-
-    /**
-     * Socket packet type `disconnect`.
-     */
-    DISCONNECT : 1,
-
-    /**
-     * Socket packet type `event`.
-     */
-    EVENT : 2,
-
-    /**
-     * Socket packet type `ack`.
-     */
-    ACK : 3,
-
-    /**
-     * Socket packet type `connect_error`.
-     */
-    CONNECT_ERROR : 4,
-
-    /**
-     * Socket packet type 'binary event'
-     */
-    BINARY_EVENT : 5,
-
-    /**
-     * Socket packet type `binary ack`.
-     * For acks with binary arguments.
-     */
-    BINARY_ACK : 6,
-
 }
 
 export {hahaduWebsocketClient,hahaduWebsocketResponse,swoole_engine_packet_type,swoole_socket_packet_type}
